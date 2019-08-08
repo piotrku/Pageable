@@ -275,6 +275,22 @@ if (!Element.prototype.closest) {
             this.wrapper.classList.add("pg-wrapper");
             this.container.classList.add("pg-container"); // hide body overflow and remove margin
 
+
+
+
+
+            /* PK fix  */
+            this.touchableDevice = false;
+            this.onFirstTouchEndFunc = () => {
+              this.touchableDevice = true;
+              window.removeEventListener('touchend', this.onFirstTouchEndFunc, false);
+            };
+            window.addEventListener('touchend', this.onFirstTouchEndFunc, false);
+            /* PK fix  */
+
+
+
+
             document.body.style.margin = 0;
             document.body.style.overflow = "hidden";
             this.container.style.display = "inline-block";
@@ -349,6 +365,7 @@ if (!Element.prototype.closest) {
      * @return {Void}
      */
     Pageable.prototype.bind = function() {
+    
         this.callbacks = {
             wheel: this._wheel.bind(this),
             update: throttle(this.update.bind(this), this.config.throttle),
@@ -735,7 +752,17 @@ if (!Element.prototype.closest) {
         if (e.type === "touchstart") {
             if (!this.events.touch) {
                 if (!evt.target.closest("a")) {
+                  
+                  
+                  /* PK fix  */
+                  if (!this.touchableDevice) {
                     this._preventDefault(e);
+                  }
+                  /* PK fix  */
+                  
+                  
+                  
+                  
                 }
 
                 return false;
@@ -753,7 +780,11 @@ if (!Element.prototype.closest) {
             return false;
         }
 
-        this._preventDefault(e);
+        /* PK fix  */
+        if (!this.touchableDevice) {
+          this._preventDefault(e);
+        }
+        /* PK fix  */
 
         this.dragging = this.config.freeScroll; // suspend slideshow
 
