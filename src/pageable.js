@@ -278,14 +278,9 @@ if (!Element.prototype.closest) {
 
 
 
-
             /* PK fix  */
-            this.touchableDevice = false;
-            this.onFirstTouchEndFunc = () => {
-              this.touchableDevice = true;
-              window.removeEventListener('touchend', this.onFirstTouchEndFunc, false);
-            };
-            window.addEventListener('touchend', this.onFirstTouchEndFunc, false);
+            this.touchableDevice = (typeof window.orientation !== 'undefined');
+            // this.onFirstTouchEndFunc();
             /* PK fix  */
 
 
